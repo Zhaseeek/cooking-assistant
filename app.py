@@ -15,10 +15,13 @@ def home():
 
     if request.method == 'POST':
         user_input = request.form['ingredients'].lower()
+        words = user_input.split()
 
         for recipe in recipes:
-            if user_input in recipe["ingredients"]:
-                results.append(recipe["name"])
+            for word in words:
+                if word in recipe["ingredients"]:
+                    results.append(recipe["name"])
+                    break
 
     return render_template('index.html', results=results)
 
