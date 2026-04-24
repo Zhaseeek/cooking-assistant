@@ -18,10 +18,8 @@ def home():
         words = user_input.split()
 
         for recipe in recipes:
-            for word in words:
-                if word in recipe["ingredients"]:
-                    results.append(recipe["name"])
-                    break
+    if all(word in recipe["ingredients"] for word in words):
+        results.append(recipe["name"])
 
     return render_template('index.html', results=results)
 
