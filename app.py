@@ -17,11 +17,24 @@ def home():
         user_input = request.form['ingredients'].lower()
         words = user_input.split()
 
+        scored_results = []
+
         for recipe in recipes:
+            ingredients = recipe["ingredients"].split()
+            score = 0
+
             for word in words:
-                if word in recipe["ingredients"]:
-                    results.append(recipe["name"])
-                    break
+                if word in ingredients:
+                    score += 1
+
+            if score > 0:
+                scored_results.append((recipe["name"], score))
+
+        # сортировка
+        scored_results.sort(key=lambda x: x[1], reverse=True)
+
+        # только названия
+        results = [r[0] for r in scored_results]
 
     return render_template('index.html', results=results)
 
