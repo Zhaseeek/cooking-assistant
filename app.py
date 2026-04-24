@@ -2,12 +2,17 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-recipes = [
-    {"name": "Chicken Soup", "ingredients": "chicken water salt"},
-    {"name": "Pasta", "ingredients": "pasta tomato cheese"},
-    {"name": "Salad", "ingredients": "tomato cucumber lettuce"},
-    {"name": "Omelette", "ingredients": "egg milk salt"},
-]
+import pandas as pd
+
+df = pd.read_csv('clean_recipes.csv')
+
+recipes = []
+
+for i in range(len(df)):
+    recipes.append({
+        "name": df.loc[i, 'clean_title'],
+        "ingredients": df.loc[i, 'clean_ingredients']
+    })
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
