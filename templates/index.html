@@ -5,30 +5,38 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
     <div class="container">
         <h1>Cooking Assistant</h1>
         <p>Find recipes using your ingredients</p>
 
         <form method="POST">
-    <input type="text" name="ingredients" placeholder="Enter ingredients">
-    <button type="submit">Search</button>
-</form>
+            <input type="text" name="ingredients" placeholder="Enter ingredients">
+            <button type="submit">Search</button>
+        </form>
 
-{% if results %}
-    <h2>Results:</h2>
-    <div class="recipes">
-    {% for r in results %}
-        <div class="recipe-card">
-            <h2>{{ r }}</h2>
-            <button>Open Recipe</button>
-        </div>
-    {% endfor %}
-</div>
-<div class="pagination">
-    <a href="/?page={{ page + 1 }}">
-        <button>Next</button>
-    </a>
-</div>
+        {% if results %}
+
+            <h2>Results:</h2>
+
+            <div class="recipes">
+                {% for r in results %}
+                    <div class="recipe-card">
+                        <h2>{{ r }}</h2>
+                        <button>Open Recipe</button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="pagination">
+                <a href="/?page={{ page + 1 }}">
+                    <button>Next</button>
+                </a>
+            </div>
+
+        {% endif %}
+
     </div>
+
 </body>
 </html>
