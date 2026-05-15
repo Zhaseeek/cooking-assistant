@@ -16,11 +16,14 @@
 
 {% if results %}
     <h2>Results:</h2>
-    <ul>
-        {% for r in results %}
-            <li>{{ r }}</li>
-        {% endfor %}
-    </ul>
+    <div class="recipes">
+    {% for r in results %}
+        <div class="recipe-card">
+            <h2>{{ r }}</h2>
+            <button>Open Recipe</button>
+        </div>
+    {% endfor %}
+</div>
 {% endif %}
     </div>
 </body>
