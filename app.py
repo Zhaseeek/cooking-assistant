@@ -41,7 +41,7 @@ def home():
         # pagination
         page = request.args.get('page', 1, type=int)
 
-        per_page = 10
+        per_page = request.args.get('limit', 10, type=int)
         start = (page - 1) * per_page
         end = start + per_page
 
