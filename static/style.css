@@ -38,3 +38,23 @@ button {
     border-radius: 6px;
     cursor: pointer;
 }
+.recipes {
+    margin-top: 20px;
+}
+
+.recipe-card {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.recipe-card button {
+    padding: 10px 15px;
+    border: none;
+    background: #ff7b54;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
