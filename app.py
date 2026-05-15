@@ -38,10 +38,20 @@ def home():
         # сортировка
         scored_results.sort(key=lambda x: x[1], reverse=True)
 
-        # только названия
-        results = [r[0] for r in scored_results]
+        # pagination
+        page = request.args.get('page', 1, type=int)
 
-    return render_template('index.html', results=results)
+        per_page = 10
+        start = (page - 1) * per_page
+        end = start + per_page
+
+        # только названия
+        results = [r[0] for r in scored_results[start:end]]
+
+    else:
+        page = 1
+
+    return render_template('index.html', results=results, page=page)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
