@@ -1,16 +1,19 @@
+```html id="a2vgsa"
 <!DOCTYPE html>
 <html>
 <head>
     <title>Cooking Assistant</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
 
     <div class="container">
+
         <h1>Cooking Assistant</h1>
         <p>Find recipes using your ingredients</p>
 
-        <form method="POST">
+        <form method="GET">
             <input type="text" name="ingredients" placeholder="Enter ingredients">
             <button type="submit">Search</button>
         </form>
@@ -20,17 +23,19 @@
             <h2>Results:</h2>
 
             <div class="recipes">
+
                 {% for r in results %}
                     <div class="recipe-card">
                         <h2>{{ r }}</h2>
                         <button>Open Recipe</button>
                     </div>
                 {% endfor %}
+
             </div>
 
             <div class="pagination">
-               <a href="/?limit={{ results|length + 10 }}">
-                    <button>Next</button>
+                <a href="/?ingredients={{ user_input }}&limit={{ results|length + 10 }}">
+                    <button>Show More</button>
                 </a>
             </div>
 
@@ -40,3 +45,4 @@
 
 </body>
 </html>
+```
