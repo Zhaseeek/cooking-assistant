@@ -24,7 +24,11 @@
         </div>
     {% endfor %}
 </div>
-{% endif %}
+<div class="pagination">
+    <a href="/?page={{ page + 1 }}">
+        <button>Next</button>
+    </a>
+</div>
     </div>
 </body>
 </html>
