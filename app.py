@@ -8,11 +8,11 @@ df = pd.read_csv('clean_recipes.csv')
 recipes = []
 
 for i in range(len(df)):
-  recipes.append({
-    "id": i,
-    "name": df.loc[i, 'clean_title'],
-    "ingredients": df.loc[i, 'clean_ingredients']
-})
+    recipes.append({
+        "id": i,
+        "name": df.loc[i, 'clean_title'],
+        "ingredients": df.loc[i, 'clean_ingredients']
+    })
 
 @app.route('/')
 def home():
@@ -58,4 +58,6 @@ def recipe_page(recipe_id):
     recipe = recipes[recipe_id]
 
     return render_template('recipe.html', recipe=recipe)
+
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
