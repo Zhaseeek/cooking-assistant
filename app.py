@@ -8,10 +8,11 @@ df = pd.read_csv('clean_recipes.csv')
 recipes = []
 
 for i in range(len(df)):
-    recipes.append({
-        "name": df.loc[i, 'clean_title'],
-        "ingredients": df.loc[i, 'clean_ingredients']
-    })
+  recipes.append({
+    "id": i,
+    "name": df.loc[i, 'clean_title'],
+    "ingredients": df.loc[i, 'clean_ingredients']
+})
 
 @app.route('/')
 def home():
@@ -37,7 +38,7 @@ def home():
                     score += 1
 
             if score > 0:
-                scored_results.append((recipe["name"], score))
+                scored_results.append((recipe, score))
 
         scored_results.sort(key=lambda x: x[1], reverse=True)
 
@@ -51,5 +52,10 @@ def home():
         user_input=user_input
     )
 
-if __name__ == '__main__':
+@app.route('/recipe/<int:recipe_id>')
+def recipe_page(recipe_id):
+
+    recipe = recipes[recipe_id]
+
+    return render_template('recipe.html', recipe=recipe)
     app.run(host='0.0.0.0', port=10000)
