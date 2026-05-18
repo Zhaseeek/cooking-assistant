@@ -26,7 +26,9 @@
                 {% for r in results %}
                     <div class="recipe-card">
                         <h2>{{ r }}</h2>
-                        <button>Open Recipe</button>
+                       <a href="/recipe/{{ r.id }}">
+    <button>Open Recipe</button>
+</a>
                     </div>
                 {% endfor %}
 
