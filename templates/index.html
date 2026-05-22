@@ -1,33 +1,75 @@
-<div class="pagination">
-    <button id="show-more-btn" data-ingredients="{{ user_input }}" data-current-limit="{{ results|length }}">Show More</button>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cooking Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
 
-<script>
-document.getElementById('show-more-btn').addEventListener('click', async function() {
-    const btn = this;
-    const ingredients = btn.getAttribute('data-ingredients');
-    const newLimit = parseInt(btn.getAttribute('data-current-limit')) + 10; 
+<body>
 
-    btn.innerText = "Loading...";
-    btn.disabled = true;
+    <div class="container">
 
-    try {
-        const response = await fetch(`/?ingredients=${ingredients}&limit=${newLimit}`);
-        const text = await response.text();
+        <h1>Cooking Assistant</h1>
+        <p>Find recipes using your ingredients</p>
 
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-        const newRecipes = doc.querySelector('.recipes').innerHTML;
+        <form method="GET">
+            <input type="text" name="ingredients" placeholder="Enter ingredients">
+            <button type="submit">Search</button>
+        </form>
 
-        document.querySelector('.recipes').innerHTML = newRecipes;
+        {% if results %}
 
-        btn.setAttribute('data-current-limit', newLimit);
-        btn.innerText = "Show More";
-        btn.disabled = false;
-    } catch (error) {
-        console.error("Ошибка:", error);
-        btn.innerText = "Show More";
-        btn.disabled = false;
+            <h2>Results:</h2>
+
+            <div class="recipes">
+
+                {% for r in results %}
+                    <div class="recipe-card">
+
+                        <h2>{{ r.name }}</h2>
+
+                        <a href="/recipe/{{ r.id }}">
+                            <button>Open Recipe</button>
+                        </a>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="pagination">
+
+                <a href="/?ingredients={{ user_input }}&limit={{ results|length + 10 }}">
+
+                    <button id="show-more-btn">
+                        Show More
+                    </button>
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <script>
+
+    window.onload = function() {
+
+        const cards = document.querySelectorAll('.recipe-card');
+
+        if (cards.length > 10) {
+
+            cards[10].scrollIntoView({
+                behavior: "smooth"
+            });
+
+        }
+
     }
-});
-</script>
+
+    </script>
+
+</body>
+</html>
