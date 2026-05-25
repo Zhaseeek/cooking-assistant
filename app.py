@@ -8,10 +8,126 @@ df = pd.read_csv('clean_recipes.csv')
 recipes = []
 
 for i in range(len(df)):
+
+    ingredients_text = str(df.loc[i, 'ingredients']).lower()
+
+    tags = []
+
+    # HIGH PROTEIN
+    if any(word in ingredients_text for word in [
+        'chicken',
+        'beef',
+        'eggs',
+        'egg',
+        'fish',
+        'tuna',
+        'salmon',
+        'shrimp',
+        'turkey',
+        'beans',
+        'black beans',
+        'kidney beans',
+        'pinto beans',
+        'cheese',
+        'milk',
+        'yogurt'
+    ]):
+
+        tags.append('High Protein')
+
+    # HEALTHY
+    if any(word in ingredients_text for word in [
+        'broccoli',
+        'spinach',
+        'lettuce',
+        'cucumber',
+        'tomato',
+        'tomatoes',
+        'carrot',
+        'olive oil',
+        'beans',
+        'lemon',
+        'garlic',
+        'onion',
+        'onions',
+        'fresh',
+        'green'
+    ]):
+
+        tags.append('Healthy')
+
+    # VEGETARIAN
+    if not any(word in ingredients_text for word in [
+        'chicken',
+        'beef',
+        'fish',
+        'salmon',
+        'shrimp',
+        'turkey',
+        'pork',
+        'bacon',
+        'tuna'
+    ]):
+
+        tags.append('Vegetarian')
+
+    # SWEET
+    if any(word in ingredients_text for word in [
+        'sugar',
+        'vanilla',
+        'chocolate',
+        'cookies',
+        'cake',
+        'cream',
+        'cinnamon',
+        'banana',
+        'bananas',
+        'honey',
+        'cocoa',
+        'milk'
+    ]):
+
+        tags.append('Sweet')
+
+    # SEAFOOD
+    if any(word in ingredients_text for word in [
+        'fish',
+        'salmon',
+        'shrimp',
+        'tuna',
+        'crab',
+        'lobster'
+    ]):
+
+        tags.append('Seafood')
+
+    # CALORIES
+    if len(ingredients_text) > 500:
+
+        calories = "700 kcal"
+
+    elif len(ingredients_text) > 250:
+
+        calories = "500 kcal"
+
+    else:
+
+        calories = "300 kcal"
+
     recipes.append({
+
         "id": i,
+
         "name": df.loc[i, 'clean_title'],
-        "ingredients": df.loc[i, 'clean_ingredients']
+
+        "ingredients": df.loc[i, 'ingredients'],
+
+        "directions": df.loc[i, 'directions'],
+
+        "tags": tags,
+
+        "calories": calories
+
     })
 
 @app.route('/')
@@ -19,7 +135,6 @@ def home():
 
     results = []
 
-    # limit всегда существует
     limit = request.args.get('limit', 10, type=int)
 
     user_input = request.args.get('ingredients', '').lower()
@@ -32,26 +147,25 @@ def home():
 
         for recipe in recipes:
 
-            ingredients = recipe["ingredients"].split()
+            ingredients = recipe["ingredients"].lower()
 
             score = 0
 
             for word in words:
 
                 if word in ingredients:
+
                     score += 1
 
             if score > 0:
 
                 scored_results.append((recipe, score))
 
-        # сортировка по score
         scored_results.sort(
             key=lambda x: x[1],
             reverse=True
         )
 
-        # берем только recipes
         results = [r[0] for r in scored_results[:limit]]
 
     return render_template(
