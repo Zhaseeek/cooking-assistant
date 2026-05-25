@@ -1,88 +1,150 @@
-<div class="recipes">
-    {% for r in results %}
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Cooking Assistant</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Cooking Assistant</h1>
+
+    <p>Find recipes using your ingredients</p>
+
+    <form method="GET">
+
+        <input
+            type="text"
+            name="ingredients"
+            placeholder="Enter ingredients">
+
+        <button type="submit">
+            Search
+        </button>
+
+    </form>
+
+    {% if results %}
+
+    <h2>Results:</h2>
+
+    <div class="recipes">
+
+        {% for r in results %}
+
         <div class="recipe-card">
 
             <h2>{{ r.name }}</h2>
 
             <a href="/recipe/{{ r.id }}">
-                <button>Open Recipe</button>
+
+                <button>
+                    Open Recipe
+                </button>
+
             </a>
 
         </div>
-    {% endfor %}
-</div>
 
-<div class="pagination">
+        {% endfor %}
 
-    <button
-        id="show-more-btn"
-        data-ingredients="{{ user_input }}"
-        data-current-limit="{{ results|length }}">
+    </div>
 
-        Show More
+    <div class="pagination">
 
-    </button>
+        <button
+            id="show-more-btn"
+            data-ingredients="{{ user_input }}"
+            data-current-limit="{{ results|length }}">
+
+            Show More
+
+        </button>
+
+    </div>
+
+    {% endif %}
 
 </div>
 
 <script>
 
-document.getElementById('show-more-btn').addEventListener('click', async function() {
+const btn = document.getElementById('show-more-btn');
 
-    const btn = this;
+if (btn) {
 
-    const ingredients = btn.getAttribute('data-ingredients');
+    btn.addEventListener('click', async function() {
 
-    const newLimit =
-        parseInt(btn.getAttribute('data-current-limit')) + 10;
+        const ingredients =
+            btn.getAttribute('data-ingredients');
 
-    btn.innerText = "Loading...";
-    btn.disabled = true;
+        const currentLimit =
+            parseInt(btn.getAttribute('data-current-limit'));
 
-    try {
+        const newLimit = currentLimit + 10;
 
-        const response =
-            await fetch(`/?ingredients=${ingredients}&limit=${newLimit}`);
+        btn.innerText = "Loading...";
+        btn.disabled = true;
 
-        const text = await response.text();
+        try {
 
-        const parser = new DOMParser();
+            const response =
+                await fetch(
+                    `/?ingredients=${ingredients}&limit=${newLimit}`
+                );
 
-        const doc = parser.parseFromString(text, 'text/html');
+            const text = await response.text();
 
-        const allCards =
-            doc.querySelectorAll('.recipe-card');
+            const parser = new DOMParser();
 
-        const currentCards =
-            document.querySelectorAll('.recipe-card').length;
+            const doc =
+                parser.parseFromString(text, 'text/html');
 
-        const recipesContainer =
-            document.querySelector('.recipes');
+            const allCards =
+                doc.querySelectorAll('.recipe-card');
 
-        for (let i = currentCards; i < allCards.length; i++) {
+            const recipesContainer =
+                document.querySelector('.recipes');
 
-            recipesContainer.innerHTML +=
-                allCards[i].outerHTML;
+            recipesContainer.innerHTML = "";
+
+            allCards.forEach(card => {
+
+                recipesContainer.innerHTML +=
+                    card.outerHTML;
+
+            });
+
+            btn.setAttribute(
+                'data-current-limit',
+                newLimit
+            );
+
+            btn.innerText = "Show More";
+            btn.disabled = false;
+
+        } catch (error) {
+
+            console.error(error);
+
+            btn.innerText = "Show More";
+            btn.disabled = false;
 
         }
 
-        btn.setAttribute(
-            'data-current-limit',
-            allCards.length
-        );
+    });
 
-        btn.innerText = "Show More";
-        btn.disabled = false;
-
-    } catch (error) {
-
-        console.error(error);
-
-        btn.innerText = "Show More";
-        btn.disabled = false;
-
-    }
-
-});
+}
 
 </script>
+
+</body>
+
+</html>
