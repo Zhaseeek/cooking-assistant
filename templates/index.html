@@ -1,9 +1,7 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
-    <title>Cooking Assistant</title>
+    <title>{{ recipe.name }}</title>
 
     <link rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
@@ -14,137 +12,43 @@
 
 <div class="container">
 
-    <h1>Cooking Assistant</h1>
+    <h1>{{ recipe.name }}</h1>
 
-    <p>Find recipes using your ingredients</p>
+    <div class="recipe-info">
 
-    <form method="GET">
+        <h2>Ingredients:</h2>
 
-        <input
-            type="text"
-            name="ingredients"
-            placeholder="Enter ingredients">
+        <p>{{ recipe.ingredients }}</p>
 
-        <button type="submit">
-            Search
-        </button>
+        <h2>Estimated Calories:</h2>
 
-    </form>
+        <p>{{ recipe.calories }}</p>
 
-    {% if results %}
+        <h2>Tags:</h2>
 
-    <h2>Results:</h2>
+        <div class="tags">
 
-    <div class="recipes">
+            {% for tag in recipe.tags %}
 
-        {% for r in results %}
+                <span class="tag">{{ tag }}</span>
 
-        <div class="recipe-card">
-
-            <h2>{{ r.name }}</h2>
-
-            <a href="/recipe/{{ r.id }}">
-
-                <button>
-                    Open Recipe
-                </button>
-
-            </a>
+            {% endfor %}
 
         </div>
 
-        {% endfor %}
+        <h2>Directions:</h2>
+
+        <p>{{ recipe.directions }}</p>
 
     </div>
 
-    <div class="pagination">
+    <a href="javascript:history.back()">
 
-        <button
-            id="show-more-btn"
-            data-ingredients="{{ user_input }}"
-            data-current-limit="{{ results|length }}">
+        <button>Back</button>
 
-            Show More
-
-        </button>
-
-    </div>
-
-    {% endif %}
+    </a>
 
 </div>
 
-<script>
-
-const btn = document.getElementById('show-more-btn');
-
-if (btn) {
-
-    btn.addEventListener('click', async function() {
-
-        const ingredients =
-            btn.getAttribute('data-ingredients');
-
-        const currentLimit =
-            parseInt(btn.getAttribute('data-current-limit'));
-
-        const newLimit = currentLimit + 10;
-
-        btn.innerText = "Loading...";
-        btn.disabled = true;
-
-        try {
-
-            const response =
-                await fetch(
-                    `/?ingredients=${ingredients}&limit=${newLimit}`
-                );
-
-            const text = await response.text();
-
-            const parser = new DOMParser();
-
-            const doc =
-                parser.parseFromString(text, 'text/html');
-
-            const allCards =
-                doc.querySelectorAll('.recipe-card');
-
-            const recipesContainer =
-                document.querySelector('.recipes');
-
-            recipesContainer.innerHTML = "";
-
-            allCards.forEach(card => {
-
-                recipesContainer.innerHTML +=
-                    card.outerHTML;
-
-            });
-
-            btn.setAttribute(
-                'data-current-limit',
-                newLimit
-            );
-
-            btn.innerText = "Show More";
-            btn.disabled = false;
-
-        } catch (error) {
-
-            console.error(error);
-
-            btn.innerText = "Show More";
-            btn.disabled = false;
-
-        }
-
-    });
-
-}
-
-</script>
-
 </body>
-
 </html>
