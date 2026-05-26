@@ -118,11 +118,11 @@ for i in range(len(df)):
 
         "id": i,
 
-        "name": df.loc[i, 'clean_title'],
+        "name": str(df.loc[i, 'clean_title']),
 
-        "ingredients": df.loc[i, 'ingredients'],
+        "ingredients": str(df.loc[i, 'ingredients']),
 
-        "directions": df.loc[i, 'directions'],
+        "directions": str(df.loc[i, 'directions']),
 
         "tags": tags,
 
