@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 
@@ -25,6 +26,40 @@
             name="ingredients"
             placeholder="Enter ingredients">
 
+        <div class="filters">
+
+            <label>
+                <input type="checkbox" name="high_protein">
+                High Protein
+            </label>
+
+            <label>
+                <input type="checkbox" name="vegetarian">
+                Vegetarian
+            </label>
+
+            <label>
+                <input type="checkbox" name="vegan">
+                Vegan
+            </label>
+
+            <label>
+                <input type="checkbox" name="gluten_free">
+                Gluten Free
+            </label>
+
+            <label>
+                <input type="checkbox" name="low_calorie">
+                Low Calorie
+            </label>
+
+            <label>
+                <input type="checkbox" name="sweet">
+                Sweet
+            </label>
+
+        </div>
+
         <button type="submit">
             Search
         </button>
@@ -42,19 +77,23 @@
         <div class="recipe-card">
 
             <h2>{{ r.name }}</h2>
-            <p><strong>Calories:</strong> {{ r.calories }}</p>
 
-<p>
+            <p>
+                <strong>Calories:</strong>
+                {{ r.calories }}
+            </p>
 
-{% for tag in r.tags %}
+            <div class="tags">
 
-    <span class="tag">
-        {{ tag }}
-    </span>
+                {% for tag in r.tags %}
 
-{% endfor %}
+                    <span class="tag">
+                        {{ tag }}
+                    </span>
 
-</p>
+                {% endfor %}
+
+            </div>
 
             <a href="/recipe/{{ r.id }}">
 
@@ -160,4 +199,5 @@ if (btn) {
 
 </body>
 
-</html>   
+</html>
+```
