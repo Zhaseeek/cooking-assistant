@@ -42,6 +42,19 @@
         <div class="recipe-card">
 
             <h2>{{ r.name }}</h2>
+            <p><strong>Calories:</strong> {{ r.calories }}</p>
+
+<p>
+
+{% for tag in r.tags %}
+
+    <span class="tag">
+        {{ tag }}
+    </span>
+
+{% endfor %}
+
+</p>
 
             <a href="/recipe/{{ r.id }}">
 
