@@ -4,7 +4,6 @@ import pandas as pd
 app = Flask(__name__)
 
 df = pd.read_csv('clean_recipes.csv')
-
 recipes = []
 
 for i in range(len(df)):
@@ -12,123 +11,119 @@ for i in range(len(df)):
     ingredients_text = str(df.loc[i, 'ingredients']).lower()
 
     tags = []
+# HIGH PROTEIN
+if any(word in ingredients_text for word in [
+    'chicken',
+    'beef',
+    'eggs',
+    'egg',
+    'fish',
+    'tuna',
+    'salmon',
+    'shrimp',
+    'turkey',
+    'beans',
+    'cheese',
+    'milk',
+    'yogurt'
+]):
 
-    # HIGH PROTEIN
-    if any(word in ingredients_text for word in [
-        'chicken',
-        'beef',
-        'eggs',
-        'egg',
-        'fish',
-        'tuna',
-        'salmon',
-        'shrimp',
-        'turkey',
-        'beans',
-        'black beans',
-        'kidney beans',
-        'pinto beans',
-        'cheese',
-        'milk',
-        'yogurt'
-    ]):
+    tags.append('High Protein')
 
-        tags.append('High Protein')
+# VEGETARIAN
+if not any(word in ingredients_text for word in [
+    'chicken',
+    'beef',
+    'fish',
+    'salmon',
+    'shrimp',
+    'turkey',
+    'pork',
+    'bacon',
+    'tuna'
+]):
 
-    # HEALTHY
-    if any(word in ingredients_text for word in [
-        'broccoli',
-        'spinach',
-        'lettuce',
-        'cucumber',
-        'tomato',
-        'tomatoes',
-        'carrot',
-        'olive oil',
-        'beans',
-        'lemon',
-        'garlic',
-        'onion',
-        'onions',
-        'fresh',
-        'green'
-    ]):
+    tags.append('Vegetarian')
 
-        tags.append('Healthy')
+# VEGAN
+if not any(word in ingredients_text for word in [
+    'chicken',
+    'beef',
+    'fish',
+    'salmon',
+    'shrimp',
+    'turkey',
+    'pork',
+    'bacon',
+    'tuna',
+    'milk',
+    'cheese',
+    'butter',
+    'cream',
+    'egg',
+    'eggs',
+    'yogurt'
+]):
 
-    # VEGETARIAN
-    if not any(word in ingredients_text for word in [
-        'chicken',
-        'beef',
-        'fish',
-        'salmon',
-        'shrimp',
-        'turkey',
-        'pork',
-        'bacon',
-        'tuna'
-    ]):
+    tags.append('Vegan')
 
-        tags.append('Vegetarian')
+# GLUTEN FREE
+if not any(word in ingredients_text for word in [
+    'flour',
+    'bread',
+    'pasta',
+    'cake',
+    'cookies',
+    'wheat',
+    'noodles'
+]):
 
-    # SWEET
-    if any(word in ingredients_text for word in [
-        'sugar',
-        'vanilla',
-        'chocolate',
-        'cookies',
-        'cake',
-        'cream',
-        'cinnamon',
-        'banana',
-        'bananas',
-        'honey',
-        'cocoa',
-        'milk'
-    ]):
+    tags.append('Gluten Free')
 
-        tags.append('Sweet')
+# SWEET
+if any(word in ingredients_text for word in [
+    'sugar',
+    'vanilla',
+    'chocolate',
+    'cookies',
+    'cake',
+    'cream',
+    'banana',
+    'cocoa',
+    'honey',
+    'dessert'
+]):
 
-    # SEAFOOD
-    if any(word in ingredients_text for word in [
-        'fish',
-        'salmon',
-        'shrimp',
-        'tuna',
-        'crab',
-        'lobster'
-    ]):
+    tags.append('Sweet')
 
-        tags.append('Seafood')
+# CALORIES
+if len(ingredients_text) > 500:
 
-    # CALORIES
-    if len(ingredients_text) > 500:
+    calories = "700 kcal"
 
-        calories = "700 kcal"
+elif len(ingredients_text) > 250:
 
-    elif len(ingredients_text) > 250:
+    calories = "500 kcal"
 
-        calories = "500 kcal"
+else:
 
-    else:
+    calories = "300 kcal"
 
-        calories = "300 kcal"
+recipes.append({
 
-    recipes.append({
+    "id": i,
 
-        "id": i,
+    "name": str(df.loc[i, 'clean_title']),
 
-        "name": df.loc[i, 'clean_title'],
+    "ingredients": str(df.loc[i, 'ingredients']),
 
-        "ingredients": df.loc[i, 'ingredients'],
+    "directions": str(df.loc[i, 'directions']),
 
-        "directions": df.loc[i, 'directions'],
+    "tags": tags,
 
-        "tags": tags,
+    "calories": calories
 
-        "calories": calories
-
-    })
+})
 
 @app.route('/')
 def home():
@@ -139,34 +134,60 @@ def home():
 
     user_input = request.args.get('ingredients', '').lower()
 
+    high_protein = request.args.get('high_protein')
+    vegetarian = request.args.get('vegetarian')
+    vegan = request.args.get('vegan')
+    gluten_free = request.args.get('gluten_free')
+    low_calorie = request.args.get('low_calorie')
+    sweet = request.args.get('sweet')
+
     if user_input:
 
         words = user_input.split()
+    scored_results = []
 
-        scored_results = []
+    for recipe in recipes:
 
-        for recipe in recipes:
+        ingredients = recipe["ingredients"].lower()
 
-            ingredients = recipe["ingredients"].lower()
+        score = 0
 
-            score = 0
+        for word in words:
 
-            for word in words:
+            if word in ingredients:
 
-                if word in ingredients:
+                score += 1
 
-                    score += 1
+        if score > 0:
 
-            if score > 0:
+            recipe_tags = recipe["tags"]
 
-                scored_results.append((recipe, score))
+            if high_protein and 'High Protein' not in recipe_tags:
+                continue
 
-        scored_results.sort(
-            key=lambda x: x[1],
-            reverse=True
-        )
+            if vegetarian and 'Vegetarian' not in recipe_tags:
+                continue
 
-        results = [r[0] for r in scored_results[:limit]]
+            if vegan and 'Vegan' not in recipe_tags:
+                continue
+
+            if gluten_free and 'Gluten Free' not in recipe_tags:
+                continue
+
+            if sweet and 'Sweet' not in recipe_tags:
+                continue
+
+            if low_calorie and recipe["calories"] != "300 kcal":
+                continue
+
+            scored_results.append((recipe, score))
+
+    scored_results.sort(
+        key=lambda x: x[1],
+        reverse=True
+    )
+
+    results = [r[0] for r in scored_results[:limit]]
 
     return render_template(
         'index.html',
@@ -174,6 +195,7 @@ def home():
         user_input=user_input,
         limit=limit
     )
+
 
 @app.route('/recipe/<int:recipe_id>')
 def recipe_page(recipe_id):
@@ -184,6 +206,7 @@ def recipe_page(recipe_id):
         'recipe.html',
         recipe=recipe
     )
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
