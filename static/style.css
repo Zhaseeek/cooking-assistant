@@ -91,3 +91,50 @@ button {
 .recipe-card button:hover {
     background: #ff5c2b;
 }
+.recipe-info {
+
+
+color: black;
+
+
+}
+
+.recipe-info p {
+
+
+color: black;
+
+line-height: 1.8;
+
+
+}
+
+.recipe-info h2 {
+
+
+color: #ff6600;
+
+
+}
+
+.tag {
+
+
+display: inline-block;
+
+background: #ffede1;
+
+color: #ff6600;
+
+padding: 6px 12px;
+
+border-radius: 20px;
+
+margin: 4px;
+
+font-size: 14px;
+
+font-weight: bold;
+
+
+}
