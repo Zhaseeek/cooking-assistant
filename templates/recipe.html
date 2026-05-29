@@ -40,6 +40,26 @@
 
         <p>{{ recipe.directions }}</p>
 
+        <h2>Similar Recipes:</h2>
+
+<div class="recipes">
+
+{% for r in similar_recipes %}
+
+    <div class="recipe-card">
+
+        <h3>{{ r.name }}</h3>
+
+        <a href="/recipe/{{ r.id }}">
+            <button>Open Recipe</button>
+        </a>
+
+    </div>
+
+{% endfor %}
+
+</div>
+
     </div>
 
     <a href="javascript:history.back()">
