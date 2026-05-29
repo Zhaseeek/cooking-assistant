@@ -127,7 +127,6 @@ for i in range(len(df)):
 
     })
 
-
 @app.route('/')
 def home():
 
@@ -152,15 +151,17 @@ def home():
 
         for recipe in recipes:
 
-            ingredients = recipe["ingredients"].lower()
+            ingredients = recipe["ingredients"].lower().split()
 
             score = 0
 
             for word in words:
 
-                if word in ingredients:
+                for ingredient_word in ingredients:
 
-                    score += 1
+                    if word in ingredient_word:
+
+                        score += 1
 
             if score > 0:
 
@@ -199,7 +200,6 @@ def home():
         user_input=user_input,
         limit=limit
     )
-
 
 @app.route('/recipe/<int:recipe_id>')
 def recipe_page(recipe_id):
