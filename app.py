@@ -230,7 +230,7 @@ def recipe_page(recipe_id):
             if word in other_ingredients:
                 similarity_score += 1
 
-        if similarity_score > 2:
+        if similarity_score > 3:
 
             similar_recipes.append((r, similarity_score))
 
