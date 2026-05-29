@@ -38,7 +38,15 @@
 
         <h2>Directions:</h2>
 
-        <p>{{ recipe.directions }}</p>
+        <ol>
+
+{% for step in recipe.directions.split('","') %}
+
+    <li>{{ step }}</li>
+
+{% endfor %}
+
+</ol>
 
         <h2>Similar Recipes:</h2>
 
