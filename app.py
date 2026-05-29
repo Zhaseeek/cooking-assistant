@@ -117,9 +117,15 @@ for i in range(len(df)):
 
         "name": str(df.loc[i, 'clean_title']),
 
-        "ingredients": str(df.loc[i, 'ingredients']),
+        "ingredients": str(df.loc[i, 'ingredients'])
+    .replace('[', '')
+    .replace(']', '')
+    .replace('"', ''),
 
-        "directions": str(df.loc[i, 'directions']),
+        "directions": str(df.loc[i, 'directions'])
+    .replace('[', '')
+    .replace(']', '')
+    .replace('"', ''),
 
         "tags": tags,
 
