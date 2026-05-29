@@ -206,11 +206,40 @@ def recipe_page(recipe_id):
 
     recipe = recipes[recipe_id]
 
-    return render_template(
-        'recipe.html',
-        recipe=recipe
+    current_ingredients = recipe["ingredients"].lower().split()
+
+    similar_recipes = []
+
+    for r in recipes:
+
+        if r["id"] == recipe_id:
+            continue
+
+        other_ingredients = r["ingredients"].lower().split()
+
+        similarity_score = 0
+
+        for word in current_ingredients:
+
+            if word in other_ingredients:
+                similarity_score += 1
+
+        if similarity_score > 2:
+
+            similar_recipes.append((r, similarity_score))
+
+    similar_recipes.sort(
+        key=lambda x: x[1],
+        reverse=True
     )
 
+    similar_recipes = [r[0] for r in similar_recipes[:3]]
+
+    return render_template(
+        'recipe.html',
+        recipe=recipe,
+        similar_recipes=similar_recipes
+    )
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=10000)
