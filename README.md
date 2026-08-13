@@ -28,10 +28,3 @@ https://cooking-assistant-gl8f.onrender.com/
 - `clean_recipes.csv` — recipe dataset
 - `requirements.txt` — Python dependencies
 
-## 🚀 Running Locally
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Zhaseeek/cooking-assistant.git
-cd cooking-assistant
